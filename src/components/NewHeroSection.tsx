@@ -1,0 +1,203 @@
+import { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { bannerAPI } from '@/lib/api';
+
+const NewHeroSection = () => {
+  const [heroBanner, setHeroBanner] = useState(null);
+  const [leftBanner, setLeftBanner] = useState(null);
+  const [rightBanner, setRightBanner] = useState(null);
+  const [bottomLeftBanner, setBottomLeftBanner] = useState(null);
+  const [bottomRightBanner, setBottomRightBanner] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // Fallback banner if no CMS data
+  const fallbackHero = {
+    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&h=350&fit=crop',
+    heading: 'Summer Beauty Collection',
+    subHeading: 'Up to 50% Off Selected Items',
+    buttonText: 'Shop Now',
+    link: '/sale'
+  };
+
+  useEffect(() => {
+    const loadBanners = async () => {
+      try {
+            const [hero, left, right, bottomLeft, bottomRight] = await Promise.all([
+          bannerAPI.getBanners('hero-slider'),
+          bannerAPI.getBanners('hero-left'),
+          bannerAPI.getBanners('hero-right'),
+          bannerAPI.getBanners('hero-bottom-left'),
+          bannerAPI.getBanners('hero-bottom-right')
+        ]);
+        
+        const heroData = hero.banners || [];
+        const leftData = left.banners || [];
+        const rightData = right.banners || [];
+        const bottomLeftData = bottomLeft.banners || [];
+        const bottomRightData = bottomRight.banners || [];
+        
+        setHeroBanner(heroData[0] || fallbackHero);
+        setLeftBanner(leftData[0]);
+        setRightBanner(rightData[0]);
+        setBottomLeftBanner(bottomLeftData[0]);
+        setBottomRightBanner(bottomRightData[0]);
+      } catch (error) {
+        console.error('Failed to load banners:', error);
+        setHeroBanner(fallbackHero);
+      }
+    };
+    
+    loadBanners();
+    
+    // Listen for banner updates
+    const handleBannerUpdate = () => {
+      setRefreshKey(prev => prev + 1);
+      loadBanners();
+    };
+    
+    window.addEventListener('bannersUpdated', handleBannerUpdate);
+    
+    return () => {
+      window.removeEventListener('bannersUpdated', handleBannerUpdate);
+    };
+  }, [refreshKey]);
+
+  const currentBanner = heroBanner || fallbackHero;
+
+  return (
+    <section className="container mx-auto px-4 py-4 lg:py-8">
+      {/* Mobile Layout */}
+      <div className="lg:hidden space-y-4">
+        {/* Main Hero Banner - Full Width on Mobile */}
+        <div className="h-[200px] sm:h-[250px] relative rounded-lg overflow-hidden cursor-pointer">
+          <img 
+            src={currentBanner.image?.startsWith('http') ? currentBanner.image : `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001'}${currentBanner.image}`} 
+            alt={currentBanner.heading}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+            <div className="text-center text-white">
+              <h2 className="text-lg sm:text-xl font-bold mb-1">{currentBanner.heading}</h2>
+              {currentBanner.subHeading && (
+                <p className="text-sm mb-2">{currentBanner.subHeading}</p>
+              )}
+              {currentBanner.buttonText && (
+                <button className="bg-white text-black px-4 py-2 rounded text-sm font-semibold">
+                  {currentBanner.buttonText}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Side Banners - Horizontal on Mobile */}
+        <div className="grid grid-cols-2 gap-3 h-[120px] sm:h-[140px]">
+          <div className="relative rounded-lg overflow-hidden cursor-pointer">
+            <img 
+              src={leftBanner?.image ? `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001'}${leftBanner.image}` : 'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=200&h=140&fit=crop'} 
+              alt={leftBanner?.heading || 'Side Banner'} 
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="relative rounded-lg overflow-hidden cursor-pointer">
+            <img 
+              src={rightBanner?.image ? `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001'}${rightBanner.image}` : 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=200&h=140&fit=crop'} 
+              alt={rightBanner?.heading || 'Side Banner'} 
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+
+        {/* Bottom Banners - Stacked on Mobile */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 h-auto">
+          <div className="h-[120px] sm:h-[140px] relative rounded-lg overflow-hidden cursor-pointer">
+            <img 
+              src={bottomLeftBanner?.image ? `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001'}${bottomLeftBanner.image}` : 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=140&fit=crop'} 
+              alt={bottomLeftBanner?.heading || 'Makeup Collection'} 
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="h-[120px] sm:h-[140px] relative rounded-lg overflow-hidden cursor-pointer">
+            <img 
+              src={bottomRightBanner?.image ? `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001'}${bottomRightBanner.image}` : 'https://images.unsplash.com/photo-1570194065650-d99fb4bedf0a?w=400&h=140&fit=crop'} 
+              alt={bottomRightBanner?.heading || 'Skincare Essentials'} 
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop Layout */}
+      <div className="hidden lg:flex gap-4 h-[500px]">
+        {/* Left Side Banner */}
+        <div className="w-[200px] h-full">
+          <div className="relative w-full h-full rounded overflow-hidden cursor-pointer">
+            <img 
+              src={leftBanner?.image ? `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001'}${leftBanner.image}` : 'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=200&h=500&fit=crop'} 
+              alt={leftBanner?.heading || 'Side Banner'} 
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+
+        {/* Central Area */}
+        <div className="flex-1 h-full flex flex-col gap-4">
+          {/* Top Hero Banner Area */}
+          <div className="h-[250px] relative rounded overflow-hidden cursor-pointer">
+            <img 
+              src={currentBanner.image?.startsWith('http') ? currentBanner.image : `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001'}${currentBanner.image}`} 
+              alt={currentBanner.heading}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+              <div className="text-center text-white">
+                <h2 className="text-2xl lg:text-3xl font-bold mb-2">{currentBanner.heading}</h2>
+                {currentBanner.subHeading && (
+                  <p className="text-lg mb-4">{currentBanner.subHeading}</p>
+                )}
+                {currentBanner.buttonText && (
+                  <button className="bg-white text-black px-6 py-3 rounded font-semibold">
+                    {currentBanner.buttonText}
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Two Horizontal Banners */}
+          <div className="h-[246px] flex gap-4">
+            <div className="flex-1 relative rounded overflow-hidden cursor-pointer">
+              <img 
+                src={bottomLeftBanner?.image ? `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001'}${bottomLeftBanner.image}` : 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=250&fit=crop'} 
+                alt={bottomLeftBanner?.heading || 'Makeup Collection'} 
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            <div className="flex-1 relative rounded overflow-hidden cursor-pointer">
+              <img 
+                src={bottomRightBanner?.image ? `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001'}${bottomRightBanner.image}` : 'https://images.unsplash.com/photo-1570194065650-d99fb4bedf0a?w=400&h=250&fit=crop'} 
+                alt={bottomRightBanner?.heading || 'Skincare Essentials'} 
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side Banner */}
+        <div className="w-[200px] h-full">
+          <div className="relative w-full h-full rounded overflow-hidden cursor-pointer">
+            <img 
+              src={rightBanner?.image ? `${import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5001'}${rightBanner.image}` : 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=200&h=500&fit=crop'} 
+              alt={rightBanner?.heading || 'Side Banner'} 
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default NewHeroSection;

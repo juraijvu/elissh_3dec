@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Test</title>
+</head>
+<body>
+    <h2>Login Test</h2>
+    <div id="result"></div>
+    
+    <script>
+        async function testLogin() {
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                resultDiv.innerHTML += '<p>Testing backend connection...</p>';
+                
+                // Test health endpoint
+                const healthResponse = await fetch('http://localhost:5002/api/health');
+                const healthData = await healthResponse.json();
+                resultDiv.innerHTML += `<p>✅ Backend health: ${JSON.stringify(healthData)}</p>`;
+                
+                // Test login
+                resultDiv.innerHTML += '<p>Testing login...</p>';
+                const loginResponse = await fetch('http://localhost:5002/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: 'admin@elisshbeauty.ae',
+                        password: 'admin123'
+                    })
+                });
+                
+                const loginData = await loginResponse.json();
+                
+                if (loginResponse.ok) {
+                    resultDiv.innerHTML += `<p>✅ Login successful: ${JSON.stringify(loginData)}</p>`;
+                } else {
+                    resultDiv.innerHTML += `<p>❌ Login failed: ${JSON.stringify(loginData)}</p>`;
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML += `<p>❌ Error: ${error.message}</p>`;
+                console.error('Error:', error);
+            }
+        }
+        
+        testLogin();
+    </script>
+</body>
+</html>

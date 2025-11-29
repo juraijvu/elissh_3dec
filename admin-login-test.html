@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login Test</title>
+</head>
+<body>
+    <h2>Admin Login Test</h2>
+    <div id="result"></div>
+    
+    <script>
+        async function testAdminLogin() {
+            try {
+                // Login as admin
+                const loginResponse = await fetch('http://localhost:5001/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: 'admin@elisshbeauty.ae',
+                        password: 'admin123'
+                    })
+                });
+                
+                const loginData = await loginResponse.json();
+                console.log('Login response:', loginData);
+                
+                if (loginData.success && loginData.token) {
+                    document.getElementById('result').innerHTML += '<p>✅ Admin login successful!</p>';
+                    
+                    // Test admin products endpoint
+                    const productsResponse = await fetch('http://localhost:5001/api/admin/products', {
+                        headers: {
+                            'Authorization': `Bearer ${loginData.token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    const productsData = await productsResponse.json();
+                    console.log('Products response:', productsData);
+                    
+                    if (productsData.success) {
+                        document.getElementById('result').innerHTML += `<p>✅ Products fetched: ${productsData.products.length} products found</p>`;
+                        document.getElementById('result').innerHTML += `<pre>${JSON.stringify(productsData.products, null, 2)}</pre>`;
+                    } else {
+                        document.getElementById('result').innerHTML += '<p>❌ Failed to fetch products</p>';
+                    }
+                } else {
+                    document.getElementById('result').innerHTML += '<p>❌ Admin login failed</p>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML += `<p>❌ Error: ${error.message}</p>`;
+            }
+        }
+        
+        // Run test when page loads
+        testAdminLogin();
+    </script>
+</body>
+</html>

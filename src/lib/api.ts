@@ -1,0 +1,256 @@
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+
+export const apiCall = async (endpoint: string, options: RequestInit = {}) => {
+  const url = `${API_BASE}${endpoint}`;
+  const token = localStorage.getItem('token');
+  
+  const defaultHeaders: HeadersInit = {
+    'Content-Type': 'application/json',
+  };
+  
+  if (token) {
+    defaultHeaders.Authorization = `Bearer ${token}`;
+  }
+  
+  const config: RequestInit = {
+    ...options,
+    headers: {
+      ...defaultHeaders,
+      ...options.headers,
+    },
+  };
+  
+  return fetch(url, config);
+};
+
+export const authAPI = {
+  login: async (data: { email: string; password: string }) => {
+    const response = await fetch(`${API_BASE}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return { data: await response.json() };
+  },
+  
+  register: async (data: any) => {
+    const response = await fetch(`${API_BASE}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return { data: await response.json() };
+  }
+};
+
+export const bannerAPI = {
+  getBanners: async (area: string) => {
+    try {
+      const response = await fetch(`${API_BASE}/banner/${area}`, {
+        headers: {
+          'Cache-Control': 'no-cache'
+        }
+      });
+      if (!response.ok) throw new Error('Failed to fetch');
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching banners:', error);
+      return { success: false, banners: [] };
+    }
+  },
+  trackClick: async (bannerId: number) => {
+    try {
+      const response = await fetch(`${API_BASE}/banner/${bannerId}/click`, {
+        method: 'POST'
+      });
+      return await response.json();
+    } catch (error) {
+      console.error('Error tracking banner click:', error);
+      return { success: false };
+    }
+  }
+};
+
+export const categoriesAPI = {
+  getAll: async () => {
+    try {
+      const response = await fetch(`${API_BASE}/categories`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      return { success: false, categories: [] };
+    }
+  },
+  getCategories: async () => {
+    try {
+      const response = await fetch(`${API_BASE}/categories`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      return { success: false, categories: [] };
+    }
+  }
+};
+
+export const productsAPI = {
+  getAll: async (params?: any) => {
+    try {
+      const queryString = params ? new URLSearchParams(params).toString() : '';
+      const response = await fetch(`${API_BASE}/products${queryString ? `?${queryString}` : ''}`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      return { success: false, products: [] };
+    }
+  },
+  getProducts: async (params?: any) => {
+    try {
+      const queryString = params ? new URLSearchParams(params).toString() : '';
+      const response = await fetch(`${API_BASE}/products${queryString ? `?${queryString}` : ''}`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      return { success: false, products: [] };
+    }
+  },
+  getFeatured: async () => {
+    try {
+      const response = await fetch(`${API_BASE}/products/featured/list`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching featured products:', error);
+      return { success: false, products: [] };
+    }
+  },
+  getFeaturedProducts: async () => {
+    try {
+      const response = await fetch(`${API_BASE}/products/featured/list`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching featured products:', error);
+      return { success: false, products: [] };
+    }
+  },
+  getSale: async () => {
+    try {
+      const response = await fetch(`${API_BASE}/products/sale/list`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching sale products:', error);
+      return { success: false, products: [] };
+    }
+  },
+  getSaleProducts: async () => {
+    try {
+      const response = await fetch(`${API_BASE}/products/sale/list`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching sale products:', error);
+      return { success: false, products: [] };
+    }
+  },
+  getById: async (id: string) => {
+    try {
+      const response = await fetch(`${API_BASE}/products/${id}`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching product:', error);
+      return { success: false, product: null };
+    }
+  },
+  getRelated: async (categoryId: string) => {
+    try {
+      const response = await fetch(`${API_BASE}/products?category=${categoryId}&limit=4`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching related products:', error);
+      return { success: false, products: [] };
+    }
+  }
+};
+
+export const cartAPI = {
+  add: async (data: { productId: number; quantity: number; variant?: any }) => {
+    const response = await apiCall('/cart/add', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+    return await response.json();
+  },
+  get: async () => {
+    const response = await apiCall('/cart');
+    return await response.json();
+  }
+};
+
+export const wishlistAPI = {
+  add: async (productId: number) => {
+    const response = await apiCall(`/wishlist/add/${productId}`, {
+      method: 'POST'
+    });
+    return await response.json();
+  },
+  remove: async (productId: number) => {
+    const response = await apiCall(`/wishlist/remove/${productId}`, {
+      method: 'DELETE'
+    });
+    return await response.json();
+  },
+  get: async () => {
+    const response = await apiCall('/wishlist');
+    return await response.json();
+  }
+};
+
+const api = {
+  apiCall,
+  authAPI,
+  bannerAPI,
+  categoriesAPI,
+  productsAPI,
+  cartAPI,
+  wishlistAPI,
+  
+  // HTTP methods
+  get: async (endpoint: string) => {
+    return apiCall(endpoint);
+  },
+  
+  post: async (endpoint: string, data?: any, options?: RequestInit) => {
+    const isFormData = data instanceof FormData;
+    return apiCall(endpoint, {
+      method: 'POST',
+      body: isFormData ? data : JSON.stringify(data),
+      ...options,
+      headers: {
+        ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
+        ...options?.headers
+      }
+    });
+  },
+  
+  put: async (endpoint: string, data?: any) => {
+    return apiCall(endpoint, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    });
+  },
+  
+  delete: async (endpoint: string) => {
+    return apiCall(endpoint, {
+      method: 'DELETE'
+    });
+  }
+};
+
+export default api;
