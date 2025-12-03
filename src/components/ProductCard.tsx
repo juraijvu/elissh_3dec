@@ -30,7 +30,7 @@ export const ProductCard = ({
   badge,
 }: ProductCardProps) => {
   const displayImage = images && images.length > 0 ? images[0] : image;
-  const imageUrl = displayImage && !displayImage.startsWith('http') ? `http://localhost:5001${displayImage}` : displayImage;
+  const imageUrl = displayImage && !displayImage.startsWith('http') ? `http://elissh.com${displayImage}` : displayImage;
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -47,7 +47,7 @@ export const ProductCard = ({
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const response = await fetch(`http://localhost:5001/api/wishlist`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://elissh.com/api'}/wishlist`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -75,8 +75,8 @@ export const ProductCard = ({
 
       setLoading(true);
       const url = isWishlisted 
-        ? `http://localhost:5001/api/wishlist/remove/${id}`
-        : `http://localhost:5001/api/wishlist/add/${id}`;
+        ? `${import.meta.env.VITE_API_URL || 'http://elissh.com/api'}/wishlist/remove/${id}`
+        : `${import.meta.env.VITE_API_URL || 'http://elissh.com/api'}/wishlist/add/${id}`;
       
       const method = isWishlisted ? 'DELETE' : 'POST';
       
