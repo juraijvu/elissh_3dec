@@ -48,7 +48,9 @@ const seedBasicData = async () => {
         price: 99.00,
         categoryId: 1,
         stock: 50,
-        isActive: true
+        isActive: true,
+        brand: 'Elissh Beauty',
+        sku: 'MC001'
       },
       {
         name: 'Foundation',
@@ -56,7 +58,9 @@ const seedBasicData = async () => {
         price: 149.00,
         categoryId: 2,
         stock: 30,
-        isActive: true
+        isActive: true,
+        brand: 'Elissh Beauty',
+        sku: 'FD001'
       }
     ];
     
