@@ -26,7 +26,7 @@ import sitemapRoutes from './routes/sitemap.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || ;
 
 // Security middleware
 app.use(helmet({

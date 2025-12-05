@@ -2,7 +2,7 @@
 const testDashboard = async () => {
   try {
     // Login first
-    const loginResponse = await fetch('http://localhost:5001/api/auth/login', {
+    const loginResponse = await fetch('http://localhost:/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -17,7 +17,7 @@ const testDashboard = async () => {
     if (!loginData.success) return;
     
     // Test dashboard endpoint
-    const dashResponse = await fetch('http://localhost:5001/api/admin/dashboard', {
+    const dashResponse = await fetch('http://localhost:/api/admin/dashboard', {
       headers: { 'Authorization': `Bearer ${loginData.token}` }
     });
     

@@ -16,7 +16,7 @@ echo ========================================
 echo   Elissh Cosmetics Application Started
 echo ========================================
 echo.
-echo Backend API: http://localhost:5001
+echo Backend API: http://localhost:
 echo Frontend App: http://localhost:5173
 echo Admin Panel: http://localhost:5173/admin
 echo.

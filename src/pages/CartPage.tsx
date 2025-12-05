@@ -21,7 +21,7 @@ const CartPage = () => {
           return;
         }
 
-        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/cart`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:/api'}/cart`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -52,7 +52,7 @@ const CartPage = () => {
   const updateQuantity = async (productId, newQuantity) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/cart/update/${productId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:/api'}/cart/update/${productId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ const CartPage = () => {
   const removeItem = async (productId) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/cart/remove/${productId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:/api'}/cart/remove/${productId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

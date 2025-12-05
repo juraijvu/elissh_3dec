@@ -26,7 +26,7 @@ export const Header = () => {
       if (!token) return;
 
       // Fetch cart count
-      const cartResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/cart`, {
+      const cartResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:/api'}/cart`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const cartData = await cartResponse.json();
@@ -35,7 +35,7 @@ export const Header = () => {
       }
 
       // Fetch wishlist count
-      const wishlistResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/wishlist`, {
+      const wishlistResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:/api'}/wishlist`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const wishlistData = await wishlistResponse.json();

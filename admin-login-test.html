@@ -11,7 +11,7 @@
         async function testAdminLogin() {
             try {
                 // Login as admin
-                const loginResponse = await fetch('http://localhost:5001/api/auth/login', {
+                const loginResponse = await fetch('http://localhost:/api/auth/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -29,7 +29,7 @@
                     document.getElementById('result').innerHTML += '<p>✅ Admin login successful!</p>';
                     
                     // Test admin products endpoint
-                    const productsResponse = await fetch('http://localhost:5001/api/admin/products', {
+                    const productsResponse = await fetch('http://localhost:/api/admin/products', {
                         headers: {
                             'Authorization': `Bearer ${loginData.token}`,
                             'Content-Type': 'application/json'

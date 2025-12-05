@@ -2,7 +2,7 @@
 const testAPI = async () => {
   try {
     // Test login first
-    const loginResponse = await fetch('http://localhost:5001/api/auth/login', {
+    const loginResponse = await fetch('http://localhost:/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -17,7 +17,7 @@ const testAPI = async () => {
     if (!loginData.success) return;
     
     // Test admin users endpoint
-    const usersResponse = await fetch('http://localhost:5001/api/admin/users', {
+    const usersResponse = await fetch('http://localhost:/api/admin/users', {
       headers: { 'Authorization': `Bearer ${loginData.token}` }
     });
     

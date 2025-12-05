@@ -16,7 +16,7 @@
             try {
                 // Test 1: Check API endpoint
                 console.log('🧪 Testing API endpoint...');
-                const response = await fetch('http://localhost:5001/api/banner/hero-slider');
+                const response = await fetch('http://localhost:/api/banner/hero-slider');
                 const data = await response.json();
                 results.innerHTML += `<p>✅ API Test: Found ${data.banners?.length || 0} hero banners</p>`;
                 
@@ -41,7 +41,7 @@
                 // Test 3: Test image URL construction
                 console.log('🧪 Testing image URL construction...');
                 const testImage = '/uploads/banners/test.jpg';
-                const baseUrl = 'http://localhost:5001';
+                const baseUrl = 'http://localhost:';
                 const constructedUrl = `${baseUrl}${testImage}`;
                 results.innerHTML += `<p>✅ URL Test: ${testImage} → ${constructedUrl}</p>`;
                 

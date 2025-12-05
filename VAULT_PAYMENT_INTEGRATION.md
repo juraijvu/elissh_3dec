@@ -102,13 +102,13 @@ Update inventory
 Add to your `backend/.env`:
 ```env
 # Vault Payment (configured via admin panel)
-BACKEND_URL=http://localhost:5001
+BACKEND_URL=http://localhost:
 ```
 
 ### Frontend Environment
 Add to your `.env`:
 ```env
-VITE_API_URL=http://localhost:5001/api
+VITE_API_URL=http://localhost:/api
 ```
 
 ## Security Features
@@ -137,7 +137,7 @@ VITE_API_URL=http://localhost:5001/api
 ### Test Webhook
 ```bash
 # Test webhook endpoint
-curl -X POST http://localhost:5001/api/payments/vault/webhook \
+curl -X POST http://localhost:/api/payments/vault/webhook \
   -H "Content-Type: application/json" \
   -d '{
     "type": "payment.completed",

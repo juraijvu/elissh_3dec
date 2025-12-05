@@ -403,14 +403,14 @@ const PaymentSettings = () => {
                   <div className="flex items-center gap-2 mt-2">
                     <Input
                       readOnly
-                      value={`${window.location.origin.replace('5173', '5001')}/api/payments/vault/webhook`}
+                      value={`${window.location.origin.replace('5173', '')}/api/payments/vault/webhook`}
                       className="font-mono text-sm"
                     />
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => {
-                        navigator.clipboard.writeText(`${window.location.origin.replace('5173', '5001')}/api/payments/vault/webhook`);
+                        navigator.clipboard.writeText(`${window.location.origin.replace('5173', '')}/api/payments/vault/webhook`);
                         toast({ title: 'Copied to clipboard' });
                       }}
                     >

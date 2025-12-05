@@ -20,7 +20,7 @@ const WishlistPage = () => {
         return;
       }
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/wishlist`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:/api'}/wishlist`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -65,7 +65,7 @@ const WishlistPage = () => {
     try {
       const token = localStorage.getItem('token');
       for (const item of wishlistItems) {
-        await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/cart/add`, {
+        await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:/api'}/cart/add`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ const WishlistPage = () => {
   const handleRemoveFromWishlist = async (productId: number) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/wishlist/remove/${productId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:/api'}/wishlist/remove/${productId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
